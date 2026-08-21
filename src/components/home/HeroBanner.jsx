@@ -6,7 +6,7 @@ import { HERO_SLIDES } from '../../data/banners';
 export const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto slide every 5 seconds
+  // Auto slide every 5.5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
@@ -20,59 +20,59 @@ export const HeroBanner = () => {
   const slide = HERO_SLIDES[currentSlide];
 
   return (
-    <section className="relative overflow-hidden py-4 sm:py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <section className="relative overflow-hidden py-2 sm:py-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4">
           {/* Main Hero Slider (3 cols) */}
-          <div className="lg:col-span-3 relative rounded-3xl overflow-hidden shadow-2xl min-h-[380px] sm:min-h-[440px] flex items-center bg-slate-900 group">
+          <div className="lg:col-span-3 relative rounded-3xl overflow-hidden shadow-xl min-h-[330px] sm:min-h-[440px] flex items-center bg-slate-900 group">
             {/* Dynamic Background */}
-            <div className={`absolute inset-0 bg-gradient-to-r ${slide.bgColor} opacity-90 transition-all duration-700`}></div>
+            <div className={`absolute inset-0 bg-gradient-to-r ${slide.bgColor} opacity-95 transition-all duration-700`}></div>
             
             {/* Background Blur Graphic */}
-            <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute -right-20 -bottom-20 w-80 sm:w-96 h-80 sm:h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
             {/* Slide Content */}
-            <div className="relative z-10 w-full p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="relative z-10 w-full p-4 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-8">
               {/* Left Text */}
-              <div className="flex-1 space-y-4 text-left">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-semibold">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <div className="flex-1 space-y-2 sm:space-y-4 text-left w-full">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-semibold">
+                  <Sparkles className="w-3 h-3 text-amber-400" />
                   <span>{slide.badge}</span>
                 </div>
 
-                <div className="space-y-1">
-                  <span className={`text-xs sm:text-sm font-bold uppercase tracking-widest block ${slide.accentColor}`}>
+                <div className="space-y-0.5 sm:space-y-1">
+                  <span className={`text-[11px] sm:text-sm font-bold uppercase tracking-widest block ${slide.accentColor}`}>
                     {slide.subtitle}
                   </span>
-                  <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                  <h1 className="text-2xl sm:text-5xl font-black text-white tracking-tight leading-tight">
                     {slide.title}
                   </h1>
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-300 font-medium line-clamp-2 max-w-md">
+                <p className="text-xs sm:text-sm text-slate-300 font-medium line-clamp-2 max-w-md hidden xs:block">
                   {slide.tagline}
                 </p>
 
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <div className="bg-red-500/20 border border-red-500/30 text-red-300 font-bold text-xs sm:text-sm px-3 py-1.5 rounded-xl">
+                <div className="pt-1 flex flex-wrap items-center gap-2 sm:gap-3">
+                  <div className="bg-red-500/20 border border-red-500/30 text-red-300 font-bold text-xs sm:text-sm px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl">
                     {slide.discount}
                   </div>
-                  <div className="text-xl sm:text-2xl font-black text-white">
+                  <div className="text-lg sm:text-2xl font-black text-white">
                     {slide.price}
                   </div>
                 </div>
 
-                <div className="pt-3 flex items-center gap-3">
+                <div className="pt-2 flex items-center gap-2 sm:gap-3">
                   <Link
                     to={slide.link}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-brand-600/30 hover:scale-105 transition-all"
+                    className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-600/30 hover:scale-105 transition-all"
                   >
                     <span>Khám phá ngay</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </Link>
                   <Link
                     to="/products"
-                    className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm backdrop-blur-md transition-colors"
+                    className="px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm backdrop-blur-md transition-colors"
                   >
                     Xem tất cả
                   </Link>
@@ -80,39 +80,39 @@ export const HeroBanner = () => {
               </div>
 
               {/* Right Image */}
-              <div className="flex-1 flex justify-center items-center relative">
-                <div className="relative w-56 sm:w-72 h-56 sm:h-72">
+              <div className="flex-1 flex justify-center items-center relative w-full sm:w-auto">
+                <div className="relative w-40 h-40 sm:w-72 sm:h-72">
                   <img
                     src={slide.image}
                     alt={slide.title}
-                    className="w-full h-full object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Slider Navigation Arrows */}
+            {/* Slider Navigation Arrows (Desktop) */}
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white backdrop-blur-md items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/30 hover:bg-black/60 text-white backdrop-blur-md items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
 
             {/* Slider Dots */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center space-x-2 z-20">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center space-x-1.5 z-20">
               {HERO_SLIDES.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentSlide(idx)}
-                  className={`h-2 rounded-full transition-all ${
-                    currentSlide === idx ? 'w-8 bg-brand-500' : 'w-2 bg-white/40'
+                  className={`h-1.5 sm:h-2 rounded-full transition-all ${
+                    currentSlide === idx ? 'w-6 sm:w-8 bg-brand-500' : 'w-1.5 sm:w-2 bg-white/40'
                   }`}
                 />
               ))}

@@ -74,7 +74,7 @@ export const FlashSale = () => {
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 pt-6">
             {flashSaleProducts.slice(0, 4).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

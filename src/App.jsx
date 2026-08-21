@@ -6,6 +6,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider } from './context/CartContext';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
+import { BottomNav } from './components/common/BottomNav';
 import { HomePage } from './pages/HomePage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
@@ -41,8 +42,8 @@ function App() {
                 {/* Global Sticky Navigation Header */}
                 <Header />
 
-                {/* Main Dynamic View Content */}
-                <main className="flex-1">
+                {/* Main Dynamic View Content (With bottom padding on mobile for BottomNav) */}
+                <main className="flex-1 pb-16 md:pb-0">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/products" element={<ProductsPage />} />
@@ -58,6 +59,9 @@ function App() {
 
                 {/* Global Footer */}
                 <Footer />
+
+                {/* Mobile Bottom Navigation Bar */}
+                <BottomNav />
               </div>
             </Router>
           </CartProvider>

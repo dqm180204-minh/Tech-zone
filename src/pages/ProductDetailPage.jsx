@@ -100,7 +100,7 @@ export const ProductDetailPage = () => {
   ).slice(0, 4);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-20">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 pb-28 md:pb-20">
       {/* Breadcrumbs */}
       <Breadcrumbs
         items={[
@@ -111,26 +111,26 @@ export const ProductDetailPage = () => {
       />
 
       {/* Main Product Hero */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm my-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-4 sm:p-8 shadow-sm my-3 sm:my-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
           {/* Left: Images Gallery (5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-5 space-y-3 sm:space-y-4">
             {/* Main Active Image with Zoom Area */}
-            <div className="relative rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden pt-[95%]">
+            <div className="relative rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden pt-[90%] sm:pt-[95%]">
               <img
                 src={selectedImage || product.thumbnail}
                 alt={product.name}
-                className="absolute inset-0 w-full h-full object-contain p-6 hover:scale-110 transition-transform duration-500"
+                className="absolute inset-0 w-full h-full object-contain p-4 sm:p-6 hover:scale-105 transition-transform duration-500"
               />
               {/* Badges */}
-              <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+              <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
                 {discountPct > 0 && (
-                  <span className="bg-red-600 text-white text-xs font-black px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-                    <Zap className="w-3.5 h-3.5 fill-current" /> Tiết kiệm {discountPct}%
+                  <span className="bg-red-600 text-white text-[11px] sm:text-xs font-black px-2 sm:px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+                    <Zap className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" /> -{discountPct}%
                   </span>
                 )}
                 {product.isFlashSale && (
-                  <span className="bg-amber-400 text-slate-900 text-[11px] font-extrabold px-2 py-0.5 rounded-md uppercase">
+                  <span className="bg-amber-400 text-slate-900 text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider">
                     Flash Sale
                   </span>
                 )}
@@ -138,12 +138,12 @@ export const ProductDetailPage = () => {
             </div>
 
             {/* Thumbnails Row */}
-            <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar">
+            <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 no-scrollbar">
               {product.images?.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(img)}
-                  className={`w-16 h-16 rounded-xl border-2 p-1 bg-slate-50 flex-shrink-0 transition-all ${
+                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl border-2 p-1 bg-slate-50 flex-shrink-0 transition-all ${
                     selectedImage === img ? 'border-brand-600 ring-2 ring-brand-500/20' : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
@@ -153,24 +153,24 @@ export const ProductDetailPage = () => {
             </div>
 
             {/* Guarantees Box */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-600">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-1">
+              <div className="flex items-center gap-2 p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] sm:text-xs text-slate-600">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>Bảo hành chính hãng 12 tháng</span>
+                <span>Bảo hành chính hãng 12T</span>
               </div>
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-600">
+              <div className="flex items-center gap-2 p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] sm:text-xs text-slate-600">
                 <RotateCcw className="w-4 h-4 text-brand-600 flex-shrink-0" />
-                <span>1 Đổi 1 trong 30 ngày nếu lỗi</span>
+                <span>1 Đổi 1 trong 30 ngày</span>
               </div>
             </div>
           </div>
 
           {/* Right: Info & Variant Selection (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="lg:col-span-7 space-y-4 sm:space-y-6">
             {/* Title & Brand header */}
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-bold text-brand-600 uppercase tracking-wider bg-brand-50 px-2.5 py-1 rounded-md">
+                <span className="text-[11px] sm:text-xs font-bold text-brand-600 uppercase tracking-wider bg-brand-50 px-2.5 py-1 rounded-md">
                   {product.brand} Official
                 </span>
                 <div className="flex items-center gap-2">
@@ -193,12 +193,12 @@ export const ProductDetailPage = () => {
                 </div>
               </div>
 
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+              <h1 className="text-lg sm:text-2xl font-black text-slate-900 leading-snug sm:leading-tight">
                 {product.name}
               </h1>
 
               {/* Rating & Sold count */}
-              <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+              <div className="flex items-center gap-3 sm:gap-4 mt-2 text-xs text-slate-500">
                 <div className="flex items-center gap-1">
                   <div className="flex items-center">
                     {[1, 2, 3, 4, 5].map((s) => (
@@ -206,7 +206,7 @@ export const ProductDetailPage = () => {
                     ))}
                   </div>
                   <span className="font-bold text-slate-800 ml-1">{product.rating}</span>
-                  <span>({product.reviewCount} đánh giá)</span>
+                  <span className="text-slate-400">({product.reviewCount})</span>
                 </div>
                 <div className="h-3 w-px bg-slate-200"></div>
                 <span>Đã bán: <strong className="text-slate-800 font-bold">{product.soldCount}</strong></span>
@@ -214,18 +214,18 @@ export const ProductDetailPage = () => {
             </div>
 
             {/* Price Box */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-red-50 via-rose-50 to-amber-50 border border-red-100 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-              <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-black text-red-600">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-red-50 via-rose-50 to-amber-50 border border-red-100 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+              <div className="flex items-baseline gap-2.5">
+                <span className="text-2xl sm:text-3xl font-black text-red-600">
                   {formatPrice(currentPrice)}
                 </span>
                 {currentOriginalPrice > currentPrice && (
-                  <span className="text-sm text-slate-400 line-through">
+                  <span className="text-xs sm:text-sm text-slate-400 line-through">
                     {formatPrice(currentOriginalPrice)}
                   </span>
                 )}
               </div>
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-lg">
+              <span className="text-[11px] sm:text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-lg self-start sm:self-auto">
                 Trả góp 0% chỉ từ {formatPrice(Math.round(currentPrice / 12))}/tháng
               </span>
             </div>
@@ -236,7 +236,7 @@ export const ProductDetailPage = () => {
                 <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">
                   1. Chọn Dung lượng bộ nhớ:
                 </label>
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-3 gap-2">
                   {product.storageOptions.map((opt) => {
                     const isSelected = selectedStorage?.size === opt.size;
                     const optPrice = basePrice + opt.priceOffset;
@@ -244,7 +244,7 @@ export const ProductDetailPage = () => {
                       <button
                         key={opt.size}
                         onClick={() => setSelectedStorage(opt)}
-                        className={`p-3 rounded-2xl border text-left transition-all relative ${
+                        className={`p-2.5 sm:p-3 rounded-2xl border text-left transition-all relative ${
                           isSelected
                             ? 'border-brand-600 bg-brand-50/50 ring-2 ring-brand-500/20'
                             : 'border-slate-200 bg-white hover:border-slate-300'
@@ -254,7 +254,7 @@ export const ProductDetailPage = () => {
                           <span>{opt.size}</span>
                           {isSelected && <Check className="w-3.5 h-3.5 text-brand-600" />}
                         </div>
-                        <div className="text-[11px] text-slate-500 mt-1 font-semibold">
+                        <div className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 sm:mt-1 font-semibold truncate">
                           {formatPrice(optPrice)}
                         </div>
                       </button>
@@ -270,16 +270,16 @@ export const ProductDetailPage = () => {
                 <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">
                   2. Chọn Màu sắc: <span className="text-brand-600 font-extrabold">{selectedColor?.name}</span>
                 </label>
-                <div className="flex flex-wrap gap-2.5">
+                <div className="flex flex-wrap gap-2">
                   {product.colors.map((color) => {
                     const isSelected = selectedColor?.name === color.name;
                     return (
                       <button
                         key={color.name}
                         onClick={() => handleColorChange(color)}
-                        className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all ${
+                        className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
                           isSelected
-                            ? 'border-brand-600 bg-brand-50/60 text-brand-900 ring-2 ring-brand-500/20'
+                            ? 'border-brand-600 bg-brand-50/60 text-brand-900 ring-2 ring-brand-500/20 font-bold'
                             : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                         }`}
                       >
@@ -296,21 +296,20 @@ export const ProductDetailPage = () => {
             )}
 
             {/* Promotions Special Gift Box */}
-            <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 space-y-2">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/60 border border-amber-200 space-y-1.5 sm:space-y-2">
               <div className="flex items-center gap-2 text-amber-800 font-bold text-xs">
-                <Gift className="w-4 h-4 text-amber-600" />
+                <Gift className="w-4 h-4 text-amber-600 flex-shrink-0" />
                 <span>Ưu đãi & Quà tặng kèm độc quyền:</span>
               </div>
-              <ul className="text-xs text-slate-700 space-y-1.5 pl-6 list-disc">
+              <ul className="text-xs text-slate-700 space-y-1 pl-5 list-disc leading-relaxed">
                 <li>Tặng củ sạc nhanh chính hãng trị giá <strong>490.000₫</strong></li>
-                <li>Giảm ngay <strong>500.000₫</strong> khi thanh toán qua VietQR / VNPAY</li>
-                <li>Giảm thêm 30% khi mua kèm phụ kiện (Ốp lưng, Kính cường lực, Tai nghe)</li>
-                <li>Hỗ trợ thu cũ đổi mới trợ giá cao nhất thị trường lên tới <strong>3.000.000₫</strong></li>
+                <li>Giảm ngay <strong>500.000₫</strong> khi thanh toán VietQR / VNPAY</li>
+                <li>Hỗ trợ thu cũ đổi mới trợ giá lên tới <strong>3.000.000₫</strong></li>
               </ul>
             </div>
 
-            {/* Quantity and CTA Buttons */}
-            <div className="space-y-3 pt-2">
+            {/* Desktop Quantity & Action Buttons */}
+            <div className="hidden sm:block space-y-3 pt-2">
               <div className="flex items-center gap-4">
                 <span className="text-xs font-bold text-slate-700">Số lượng:</span>
                 <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
@@ -335,8 +334,8 @@ export const ProductDetailPage = () => {
                 </span>
               </div>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              {/* Desktop Action Buttons */}
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={handleAddToCart}
                   className="py-3.5 px-4 rounded-2xl bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all"
@@ -358,11 +357,11 @@ export const ProductDetailPage = () => {
       </div>
 
       {/* Tabs Section: Specs / Description / Reviews */}
-      <div className="mt-8">
-        <div className="flex border-b border-slate-200 gap-6 text-sm font-bold mb-6 overflow-x-auto no-scrollbar">
+      <div className="mt-6 sm:mt-8">
+        <div className="flex border-b border-slate-200 gap-4 sm:gap-6 text-xs sm:text-sm font-bold mb-4 sm:mb-6 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('specs')}
-            className={`pb-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`pb-2.5 sm:pb-3 border-b-2 transition-all whitespace-nowrap ${
               activeTab === 'specs'
                 ? 'border-brand-600 text-brand-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -372,24 +371,24 @@ export const ProductDetailPage = () => {
           </button>
           <button
             onClick={() => setActiveTab('description')}
-            className={`pb-3 border-b-2 transition-all whitespace-nowrap ${
+            className={`pb-2.5 sm:pb-3 border-b-2 transition-all whitespace-nowrap ${
               activeTab === 'description'
                 ? 'border-brand-600 text-brand-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            Mô tả sản phẩm & Điểm nổi bật
+            Mô tả sản phẩm
           </button>
           <button
             onClick={() => setActiveTab('reviews')}
-            className={`pb-3 border-b-2 transition-all whitespace-nowrap flex items-center gap-1.5 ${
+            className={`pb-2.5 sm:pb-3 border-b-2 transition-all whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'reviews'
                 ? 'border-brand-600 text-brand-600'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <span>Đánh giá khách hàng</span>
-            <span className="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded-full">
+            <span>Đánh giá</span>
+            <span className="bg-slate-100 text-slate-600 text-[10px] sm:text-xs px-2 py-0.5 rounded-full">
               {product.reviewCount}
             </span>
           </button>
@@ -399,20 +398,20 @@ export const ProductDetailPage = () => {
         {activeTab === 'specs' && <ProductSpecs specs={product.specs} />}
         
         {activeTab === 'description' && (
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 space-y-6">
-            <h3 className="text-lg font-bold text-slate-900">Đặc điểm nổi bật của {product.name}</h3>
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-8 space-y-4 sm:space-y-6">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900">Đặc điểm nổi bật của {product.name}</h3>
             
             {/* Highlights List */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {product.highlights?.map((hl, idx) => (
-                <div key={idx} className="flex items-start gap-2.5 p-3 rounded-xl bg-brand-50/40 border border-brand-100 text-xs font-medium text-slate-800">
+                <div key={idx} className="flex items-start gap-2.5 p-2.5 sm:p-3 rounded-xl bg-brand-50/40 border border-brand-100 text-xs font-medium text-slate-800">
                   <Sparkles className="w-4 h-4 text-brand-600 flex-shrink-0 mt-0.5" />
                   <span>{hl}</span>
                 </div>
               ))}
             </div>
 
-            <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line pt-4 border-t border-slate-100">
+            <div className="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line pt-3 border-t border-slate-100">
               {product.description}
             </div>
           </div>
@@ -423,20 +422,47 @@ export const ProductDetailPage = () => {
 
       {/* Similar Products */}
       {similarProducts.length > 0 && (
-        <div className="mt-14">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-black text-slate-900">Sản phẩm tương tự</h3>
+        <div className="mt-10 sm:mt-14">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h3 className="text-lg sm:text-xl font-black text-slate-900">Sản phẩm tương tự</h3>
             <Link to="/products" className="text-xs font-bold text-brand-600 hover:underline">
               Xem tất cả
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {similarProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
         </div>
       )}
+
+      {/* MOBILE STICKY BOTTOM ACTION BAR (Cố định dưới cùng màn hình điện thoại) */}
+      <div className="sm:hidden fixed bottom-12 left-0 right-0 z-30 bg-white/95 backdrop-blur-lg border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-3 py-2 flex items-center justify-between gap-2">
+        <div className="flex flex-col min-w-0 pr-1">
+          <span className="text-[10px] text-slate-400 uppercase font-bold tracking-tight">Giá ưu đãi</span>
+          <span className="text-base font-black text-red-600 leading-none truncate">
+            {formatPrice(currentPrice)}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={handleAddToCart}
+            className="p-2.5 rounded-xl bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 transition-colors"
+            title="Thêm vào giỏ"
+          >
+            <ShoppingBag className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleBuyNow}
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-extrabold text-xs shadow-md shadow-red-500/20 flex items-center gap-1.5"
+          >
+            <Zap className="w-3.5 h-3.5 fill-current" />
+            <span>Mua Ngay</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

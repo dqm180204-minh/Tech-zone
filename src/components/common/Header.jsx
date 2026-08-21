@@ -15,7 +15,8 @@ import {
   LogOut,
   PackageCheck,
   Flame,
-  ArrowRight
+  ArrowRight,
+  SlidersHorizontal
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -37,6 +38,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
   const userMenuRef = useRef(null);
 
   // Close mobile menu on route change
@@ -67,7 +69,10 @@ export const Header = () => {
   // Click outside to close search & user menu
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
+      if (
+        searchRef.current && !searchRef.current.contains(e.target) &&
+        mobileSearchRef.current && !mobileSearchRef.current.contains(e.target)
+      ) {
         setIsSearchOpen(false);
       }
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
@@ -87,26 +92,28 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full shadow-sm">
+    <header className="sticky top-0 z-40 w-full shadow-sm select-none">
       {/* Top Banner Announcement */}
-      <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-          <div className="flex items-center space-x-2">
-            <span className="flex items-center gap-1 bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full text-[11px] font-semibold border border-amber-500/30">
+      <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-3 sm:px-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center gap-2">
+          <div className="flex items-center space-x-2 truncate">
+            <span className="flex-shrink-0 flex items-center gap-1 bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold border border-amber-500/30">
               <Sparkles className="w-3 h-3 text-amber-400" />
-              Ưu đãi tháng này
+              HOT
             </span>
-            <span>Thu cũ đổi mới trợ giá đến <strong>3.000.000₫</strong> • Trả góp 0%</span>
+            <span className="truncate text-[11px] sm:text-xs">
+              Thu cũ đổi mới trợ giá <strong>3.000.000₫</strong> • Trả góp 0%
+            </span>
           </div>
-          <div className="hidden md:flex items-center space-x-5 text-xs text-slate-400">
+          <div className="hidden md:flex items-center space-x-5 text-xs text-slate-400 flex-shrink-0">
             <a href="tel:18006868" className="hover:text-white flex items-center gap-1.5 transition-colors">
               <PhoneCall className="w-3.5 h-3.5 text-brand-400" />
-              Hotline: <strong className="text-white">1800 6868</strong> (Miễn phí)
+              Hotline: <strong className="text-white">1800 6868</strong>
             </a>
             <div className="h-3 w-px bg-slate-700"></div>
             <span className="flex items-center gap-1">
               <MapPin className="w-3.5 h-3.5 text-brand-400" />
-              Hệ thống 120 cửa hàng toàn quốc
+              120 Showrooms toàn quốc
             </span>
           </div>
         </div>
@@ -114,24 +121,33 @@ export const Header = () => {
 
       {/* Main Navbar */}
       <div className="bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18 py-3 gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-18 py-2 sm:py-3 gap-2 sm:gap-4">
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-1.5 rounded-xl text-slate-700 hover:bg-slate-100 md:hidden flex-shrink-0"
+              aria-label="Menu"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform">
-                <Smartphone className="w-6 h-6" />
+            <Link to="/" className="flex items-center gap-2 flex-shrink-0 group">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform">
+                <Smartphone className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-black tracking-tight text-slate-900 leading-none group-hover:text-brand-600 transition-colors">
+                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none group-hover:text-brand-600 transition-colors">
                   TECH<span className="text-brand-600">ZONE</span>
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-0.5">
-                  Điện Thoại & Công Nghệ
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-0.5 hidden xs:block">
+                  Smartphones
                 </span>
               </div>
             </Link>
 
-            {/* Live Search Bar */}
+            {/* Desktop Live Search Bar */}
             <div className="flex-1 max-w-xl relative hidden md:block" ref={searchRef}>
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
@@ -151,7 +167,7 @@ export const Header = () => {
                 </button>
               </form>
 
-              {/* Live Search Dropdown Suggestions */}
+              {/* Desktop Live Search Dropdown Suggestions */}
               {isSearchOpen && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-50 animate-slide-up">
                   {searchSuggestions.length > 0 ? (
@@ -209,11 +225,11 @@ export const Header = () => {
             </div>
 
             {/* Right Action Icons */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* Wishlist Link */}
+            <div className="flex items-center space-x-1.5 sm:space-x-3">
+              {/* Wishlist Link (Desktop) */}
               <Link
                 to="/wishlist"
-                className="relative p-2.5 rounded-xl text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition-all flex items-center justify-center group"
+                className="hidden sm:flex relative p-2.5 rounded-xl text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition-all items-center justify-center group"
                 title="Sản phẩm yêu thích"
               >
                 <Heart className="w-5 h-5 group-hover:scale-110 transition-transform" />
@@ -227,12 +243,12 @@ export const Header = () => {
               {/* Cart Link */}
               <Link
                 to="/cart"
-                className="relative p-2.5 rounded-xl bg-slate-50 hover:bg-brand-50 text-slate-800 hover:text-brand-600 transition-all flex items-center gap-2 group border border-slate-200/80"
+                className="relative p-2 sm:p-2.5 rounded-xl bg-slate-50 hover:bg-brand-50 text-slate-800 hover:text-brand-600 transition-all flex items-center gap-1.5 sm:gap-2 group border border-slate-200/80"
               >
                 <div className="relative">
                   <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform text-slate-700 group-hover:text-brand-600" />
                   {totalItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">
+                    <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[9px] sm:text-[10px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-md">
                       {totalItems}
                     </span>
                   )}
@@ -247,24 +263,24 @@ export const Header = () => {
                 {isAuthenticated ? (
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center gap-2 p-1.5 pr-3 rounded-full hover:bg-slate-100 border border-slate-200 transition-all"
+                    className="flex items-center gap-1.5 p-1 sm:p-1.5 sm:pr-3 rounded-full hover:bg-slate-100 border border-slate-200 transition-all"
                   >
                     <img
                       src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
                       alt={user?.name}
                       className="w-7 h-7 rounded-full object-cover border border-brand-500"
                     />
-                    <span className="text-xs font-bold text-slate-700 max-w-[90px] truncate hidden md:inline">
+                    <span className="text-xs font-bold text-slate-700 max-w-[80px] truncate hidden md:inline">
                       {user?.name}
                     </span>
                   </button>
                 ) : (
                   <Link
                     to="/login"
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-all shadow-sm shadow-brand-500/20"
+                    className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-all shadow-sm shadow-brand-500/20"
                   >
-                    <User className="w-4 h-4" />
-                    <span>Đăng nhập</span>
+                    <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span className="hidden xs:inline">Đăng nhập</span>
                   </Link>
                 )}
 
@@ -305,40 +321,116 @@ export const Header = () => {
                   </div>
                 )}
               </div>
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 rounded-xl text-slate-700 hover:bg-slate-100 md:hidden"
-                aria-label="Menu"
-              >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
             </div>
           </div>
 
-          {/* Mobile Search Bar */}
-          <div className="pb-3 md:hidden">
+          {/* Mobile Search Bar & Auto-suggest */}
+          <div className="pb-2.5 md:hidden relative" ref={mobileSearchRef}>
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
-                placeholder="Tìm iPhone, Samsung, Xiaomi..."
+                placeholder="Tìm iPhone 16, Galaxy S24, Xiaomi..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-100 text-slate-800 text-xs rounded-full pl-9 pr-20 py-2 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                onFocus={() => searchQuery.trim() && setIsSearchOpen(true)}
+                className="w-full bg-slate-100 text-slate-900 text-xs rounded-full pl-9 pr-14 py-2.5 border border-slate-200/80 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all shadow-inner"
               />
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-12 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
               <button
                 type="submit"
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-brand-600 text-white text-[11px] font-semibold px-3 py-1 rounded-full"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-full"
               >
                 Tìm
               </button>
             </form>
+
+            {/* Mobile Search Dropdown */}
+            {isSearchOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50 animate-slide-up max-h-[60vh] overflow-y-auto">
+                {searchSuggestions.length > 0 ? (
+                  <div className="py-2">
+                    <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between border-b border-slate-100">
+                      <span>Gợi ý ({searchSuggestions.length})</span>
+                      <Link 
+                        to={`/products?search=${encodeURIComponent(searchQuery)}`}
+                        onClick={() => setIsSearchOpen(false)}
+                        className="text-brand-600 text-xs font-semibold"
+                      >
+                        Xem tất cả →
+                      </Link>
+                    </div>
+                    {searchSuggestions.map((prod) => (
+                      <Link
+                        key={prod.id}
+                        to={`/product/${prod.id}`}
+                        onClick={() => setIsSearchOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 border-b border-slate-50 last:border-none"
+                      >
+                        <img
+                          src={prod.thumbnail}
+                          alt={prod.name}
+                          className="w-10 h-10 object-contain rounded-lg border border-slate-100 flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-xs font-bold text-slate-900 truncate">
+                            {prod.name}
+                          </h4>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="text-xs font-extrabold text-red-600">
+                              {formatPrice(prod.isFlashSale ? prod.flashSalePrice : prod.price)}
+                            </span>
+                            {prod.originalPrice > prod.price && (
+                              <span className="text-[10px] text-slate-400 line-through">
+                                {formatPrice(prod.originalPrice)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-xs text-slate-500">
+                    Không tìm thấy sản phẩm nào khớp với "<strong>{searchQuery}</strong>"
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Secondary Category Navigation Bar */}
+        {/* Mobile Quick Brand Strip (Horizontal Scroll) */}
+        <div className="md:hidden border-t border-slate-100 bg-slate-50/90 px-3 py-2">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <Link
+              to="/products?filter=flashsale"
+              className="flex items-center gap-1 bg-red-50 text-red-600 border border-red-200/80 px-2.5 py-1 rounded-full text-[11px] font-bold flex-shrink-0"
+            >
+              <Flame className="w-3 h-3 fill-red-500" />
+              <span>Flash Sale</span>
+            </Link>
+            {BRANDS.filter(b => b.id !== 'all').map((brand) => (
+              <Link
+                key={brand.id}
+                to={`/products?brand=${brand.id}`}
+                className="bg-white text-slate-700 border border-slate-200 px-2.5 py-1 rounded-full text-[11px] font-semibold flex-shrink-0 hover:border-brand-500"
+              >
+                {brand.name.replace(' (iPhone)', '')}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Secondary Category Navigation Bar */}
         <div className="bg-slate-50/90 border-t border-slate-200/60 hidden md:block">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-700 py-2 overflow-x-auto no-scrollbar">
@@ -383,15 +475,15 @@ export const Header = () => {
 
       {/* Mobile Drawer Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-[110px] bottom-0 bg-black/50 backdrop-blur-sm z-50 flex flex-col justify-start">
-          <div className="bg-white max-h-[85vh] overflow-y-auto p-5 rounded-b-3xl shadow-2xl border-t border-slate-100 animate-slide-up">
+        <div className="md:hidden fixed inset-0 top-[100px] bg-black/50 backdrop-blur-sm z-50 flex flex-col justify-start">
+          <div className="bg-white max-h-[80vh] overflow-y-auto p-5 rounded-b-3xl shadow-2xl border-t border-slate-100 animate-slide-up">
             <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
               Danh mục thương hiệu
             </div>
             <div className="grid grid-cols-2 gap-2 mb-5">
               <Link
                 to="/products"
-                className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-brand-50 text-sm font-semibold text-slate-800"
+                className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-brand-50 text-xs font-bold text-slate-800"
               >
                 <span>Tất cả sản phẩm</span>
                 <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -400,7 +492,7 @@ export const Header = () => {
                 <Link
                   key={brand.id}
                   to={`/products?brand=${brand.id}`}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-brand-50 text-sm font-semibold text-slate-800"
+                  className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-brand-50 text-xs font-bold text-slate-800"
                 >
                   <span>{brand.name}</span>
                   <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -411,21 +503,21 @@ export const Header = () => {
             <div className="border-t border-slate-100 pt-4 space-y-2">
               <Link
                 to="/products?filter=flashsale"
-                className="flex items-center gap-2 p-2.5 rounded-xl text-red-600 font-bold bg-red-50 text-sm"
+                className="flex items-center gap-2 p-2.5 rounded-xl text-red-600 font-bold bg-red-50 text-xs"
               >
                 <Flame className="w-4 h-4 fill-red-500" />
                 <span>Flash Sale Giờ Vàng</span>
               </Link>
               <Link
                 to="/wishlist"
-                className="flex items-center gap-2 p-2.5 rounded-xl text-slate-700 font-medium hover:bg-slate-50 text-sm"
+                className="flex items-center gap-2 p-2.5 rounded-xl text-slate-700 font-medium hover:bg-slate-50 text-xs"
               >
                 <Heart className="w-4 h-4 text-rose-500" />
                 <span>Danh sách yêu thích ({wishlistCount})</span>
               </Link>
               <Link
                 to="/cart"
-                className="flex items-center gap-2 p-2.5 rounded-xl text-slate-700 font-medium hover:bg-slate-50 text-sm"
+                className="flex items-center gap-2 p-2.5 rounded-xl text-slate-700 font-medium hover:bg-slate-50 text-xs"
               >
                 <ShoppingCart className="w-4 h-4 text-brand-600" />
                 <span>Giỏ hàng ({totalItems})</span>
