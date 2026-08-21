@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from './ToastContext';
+import { useAuth } from './AuthContext';
 import { PROMO_COUPONS } from '../data/banners';
 import { generateOrderId } from '../utils/formatters';
 import { api } from '../services/api';
@@ -9,6 +10,7 @@ const CART_STORAGE_KEY = 'techzone_cart_items';
 const ORDERS_STORAGE_KEY = 'techzone_orders_history';
 
 export const CartProvider = ({ children }) => {
+  const { user } = useAuth();
   const [cartItems, setCartItems] = useState(() => {
     try {
       const saved = localStorage.getItem(CART_STORAGE_KEY);
@@ -40,6 +42,11 @@ export const CartProvider = ({ children }) => {
 
   // Thêm vào giỏ hàng
   const addToCart = (product, selectedColor, selectedStorage, quantity = 1) => {
+    // Kiem tra quyen Admin: Admin khong the mua hang
+    if (user?.role === 'admin') {
+      error('Tài khoản Quản Trị Viên (Admin) không thể mua hàng! Bạn chỉ có quyền vào Trang Quản Trị để quản lý sản phẩm.');
+      return false;
+    }
     const colorName = selectedColor?.name || product.colors?.[0]?.name || 'Tiêu chuẩn';
     const colorHex = selectedColor?.hex || product.colors?.[0]?.hex || '#000000';
     const storageSize = selectedStorage?.size || product.storageOptions?.[0]?.size || 'Tiêu chuẩn';
@@ -154,6 +161,10 @@ export const CartProvider = ({ children }) => {
 
   // Đặt hàng
   const placeOrder = (customerInfo, paymentMethod) => {
+    if (user?.role === 'admin') {
+      error('Tài khoản Quản Trị Viên không thể tạo đơn mua hàng. Vui lòng đăng nhập tài khoản Khách Hàng!');
+      return null;
+    }
     const orderId = generateOrderId();
     const newOrder = {
       orderId,

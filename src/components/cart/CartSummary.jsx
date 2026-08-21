@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tag, ArrowRight, Check, X, ShieldCheck } from 'lucide-react';
+import { Tag, ArrowRight, Check, X, ShieldCheck, LayoutDashboard } from 'lucide-react';
 import { formatPrice } from '../../utils/formatters';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import { PROMO_COUPONS } from '../../data/banners';
 
 export const CartSummary = ({ onProceedCheckout, isCheckoutPage = false }) => {
@@ -16,6 +17,9 @@ export const CartSummary = ({ onProceedCheckout, isCheckoutPage = false }) => {
     removeCoupon,
     cartItems
   } = useCart();
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
 
   const [inputCode, setInputCode] = useState('');
 
@@ -142,19 +146,37 @@ export const CartSummary = ({ onProceedCheckout, isCheckoutPage = false }) => {
       {/* Action Button */}
       {!isCheckoutPage && (
         <div className="space-y-3 pt-2">
-          <Link
-            to="/checkout"
-            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/25 hover:scale-[1.02] transition-all"
-          >
-            <span>Tiến hành đặt hàng ngay</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            to="/products"
-            className="w-full py-2.5 rounded-2xl text-center text-xs font-bold text-slate-600 hover:text-brand-600 block transition-colors"
-          >
-            ← Tiếp tục mua sắm
-          </Link>
+          {isAdmin ? (
+            <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-slate-700 space-y-2">
+              <span className="font-bold text-amber-800 block">⚠️ Tài khoản Admin không thể mua hàng</span>
+              <p className="text-[11px] text-slate-500 leading-snug">
+                Chức năng thanh toán chỉ dành cho Khách hàng. Bạn hãy chuyển sang Trang Quản Trị để quản lý đơn hàng của hệ thống.
+              </p>
+              <Link
+                to="/admin"
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-800 transition-colors"
+              >
+                <LayoutDashboard className="w-4 h-4 text-amber-400" />
+                <span>Vào Trang Quản Trị (Admin)</span>
+              </Link>
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/checkout"
+                className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/25 hover:scale-[1.02] transition-all"
+              >
+                <span>Tiến hành đặt hàng ngay</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                to="/products"
+                className="w-full py-2.5 rounded-2xl text-center text-xs font-bold text-slate-600 hover:text-brand-600 block transition-colors"
+              >
+                ← Tiếp tục mua sắm
+              </Link>
+            </>
+          )}
         </div>
       )}
 

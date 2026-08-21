@@ -16,7 +16,9 @@ import {
   Sparkles,
   Gift,
   ChevronRight,
-  PhoneCall
+  PhoneCall,
+  LayoutDashboard,
+  Settings
 } from 'lucide-react';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductSpecs } from '../components/product/ProductSpecs';
@@ -26,6 +28,7 @@ import { PRODUCTS } from '../data/mockProducts';
 import { formatPrice, calculateDiscountPercent } from '../utils/formatters';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 export const ProductDetailPage = () => {
@@ -33,8 +36,10 @@ export const ProductDetailPage = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { user } = useAuth();
   const { success, info } = useToast();
 
+  const isAdmin = user?.role === 'admin';
   const product = PRODUCTS.find((p) => p.id === id);
 
   // Variant States
@@ -85,8 +90,10 @@ export const ProductDetailPage = () => {
   };
 
   const handleBuyNow = () => {
-    addToCart(product, selectedColor, selectedStorage, quantity);
-    navigate('/cart');
+    const res = addToCart(product, selectedColor, selectedStorage, quantity);
+    if (res !== false) {
+      navigate('/cart');
+    }
   };
 
   const handleShare = () => {
@@ -109,6 +116,26 @@ export const ProductDetailPage = () => {
           { label: product.name, path: `/product/${product.id}` },
         ]}
       />
+
+      {/* Admin Notice Banner if Admin is Viewing */}
+      {isAdmin && (
+        <div className="my-3 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-amber-600 flex-shrink-0" />
+            <div>
+              <span className="font-bold text-slate-900 block">Bạn đang đăng nhập với tư cách Quản Trị Viên (Admin)</span>
+              <span className="text-slate-600">Tài khoản Admin không thực hiện mua hàng, chỉ quản lý và chỉnh sửa thông số.</span>
+            </div>
+          </div>
+          <Link
+            to="/admin/products"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl transition-colors"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            <span>Quản lý trong Admin</span>
+          </Link>
+        </div>
+      )}
 
       {/* Main Product Hero */}
       <div className="bg-white rounded-3xl border border-slate-200/80 p-4 sm:p-8 shadow-sm my-3 sm:my-4">
@@ -308,49 +335,73 @@ export const ProductDetailPage = () => {
               </ul>
             </div>
 
-            {/* Desktop Quantity & Action Buttons */}
+            {/* Desktop Action Area */}
             <div className="hidden sm:block space-y-3 pt-2">
-              <div className="flex items-center gap-4">
-                <span className="text-xs font-bold text-slate-700">Số lượng:</span>
-                <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-2 hover:bg-slate-200 text-slate-600 transition-colors"
-                  >
-                    <Minus className="w-3.5 h-3.5" />
-                  </button>
-                  <span className="px-4 text-xs font-bold text-slate-800 min-w-[32px] text-center">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="p-2 hover:bg-slate-200 text-slate-600 transition-colors"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
+              {isAdmin ? (
+                /* Admin Notification & Edit Shortcut */
+                <div className="p-4 rounded-2xl bg-slate-900 text-white space-y-3 shadow-md">
+                  <div className="flex items-center gap-2 text-amber-400 font-bold text-xs">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Tài Khoản Quản Trị Viên (Admin)</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Bạn đang đăng nhập bằng tài khoản chủ quản trị. Chức năng đặt mua hàng chỉ dành cho <strong>Khách Hàng</strong>. Bạn có thể vào Trang Quản Trị để cập nhật giá bán, tồn kho và thông số cho điện thoại này.
+                  </p>
+                  <div className="pt-1 flex items-center gap-3">
+                    <Link
+                      to="/admin/products"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-md transition-all"
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      <span>Quản lý thông số máy trong Admin</span>
+                    </Link>
+                  </div>
                 </div>
-                <span className="text-xs text-slate-400">
-                  (Còn {product.stock} máy tại kho)
-                </span>
-              </div>
+              ) : (
+                /* Customer Purchase Buttons */
+                <>
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs font-bold text-slate-700">Số lượng:</span>
+                    <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                      <button
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        className="p-2 hover:bg-slate-200 text-slate-600 transition-colors"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
+                      </button>
+                      <span className="px-4 text-xs font-bold text-slate-800 min-w-[32px] text-center">
+                        {quantity}
+                      </span>
+                      <button
+                        onClick={() => setQuantity(quantity + 1)}
+                        className="p-2 hover:bg-slate-200 text-slate-600 transition-colors"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <span className="text-xs text-slate-400">
+                      (Còn {product.stock} máy tại kho)
+                    </span>
+                  </div>
 
-              {/* Desktop Action Buttons */}
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <button
-                  onClick={handleAddToCart}
-                  className="py-3.5 px-4 rounded-2xl bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>Thêm vào giỏ hàng</span>
-                </button>
-                <button
-                  onClick={handleBuyNow}
-                  className="py-3.5 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-500/25 transition-all"
-                >
-                  <Zap className="w-4 h-4 fill-current" />
-                  <span>Mua ngay (Giao tận nơi 2h)</span>
-                </button>
-              </div>
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    <button
+                      onClick={handleAddToCart}
+                      className="py-3.5 px-4 rounded-2xl bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>Thêm vào giỏ hàng</span>
+                    </button>
+                    <button
+                      onClick={handleBuyNow}
+                      className="py-3.5 px-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-500/25 transition-all"
+                    >
+                      <Zap className="w-4 h-4 fill-current" />
+                      <span>Mua ngay (Giao tận nơi 2h)</span>
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -437,32 +488,47 @@ export const ProductDetailPage = () => {
         </div>
       )}
 
-      {/* MOBILE STICKY BOTTOM ACTION BAR (Cố định dưới cùng màn hình điện thoại) */}
-      <div className="sm:hidden fixed bottom-12 left-0 right-0 z-30 bg-white/95 backdrop-blur-lg border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-3 py-2 flex items-center justify-between gap-2">
-        <div className="flex flex-col min-w-0 pr-1">
-          <span className="text-[10px] text-slate-400 uppercase font-bold tracking-tight">Giá ưu đãi</span>
-          <span className="text-base font-black text-red-600 leading-none truncate">
-            {formatPrice(currentPrice)}
-          </span>
+      {/* MOBILE STICKY BOTTOM ACTION BAR */}
+      {isAdmin ? (
+        <div className="sm:hidden fixed bottom-12 left-0 right-0 z-30 bg-slate-900 text-white px-3 py-2.5 flex items-center justify-between shadow-lg">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-amber-400" />
+            <span className="text-xs font-bold text-amber-300">Tài khoản Quản Trị</span>
+          </div>
+          <Link
+            to="/admin/products"
+            className="px-3.5 py-1.5 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md"
+          >
+            Chỉnh sửa trong Admin
+          </Link>
         </div>
+      ) : (
+        <div className="sm:hidden fixed bottom-12 left-0 right-0 z-30 bg-white/95 backdrop-blur-lg border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-3 py-2 flex items-center justify-between gap-2">
+          <div className="flex flex-col min-w-0 pr-1">
+            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-tight">Giá ưu đãi</span>
+            <span className="text-base font-black text-red-600 leading-none truncate">
+              {formatPrice(currentPrice)}
+            </span>
+          </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <button
-            onClick={handleAddToCart}
-            className="p-2.5 rounded-xl bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 transition-colors"
-            title="Thêm vào giỏ"
-          >
-            <ShoppingBag className="w-5 h-5" />
-          </button>
-          <button
-            onClick={handleBuyNow}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-extrabold text-xs shadow-md shadow-red-500/20 flex items-center gap-1.5"
-          >
-            <Zap className="w-3.5 h-3.5 fill-current" />
-            <span>Mua Ngay</span>
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={handleAddToCart}
+              className="p-2.5 rounded-xl bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 transition-colors"
+              title="Thêm vào giỏ"
+            >
+              <ShoppingBag className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleBuyNow}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-extrabold text-xs shadow-md shadow-red-500/20 flex items-center gap-1.5"
+            >
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              <span>Mua Ngay</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
