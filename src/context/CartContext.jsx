@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from './ToastContext';
 import { PROMO_COUPONS } from '../data/banners';
 import { generateOrderId } from '../utils/formatters';
+import { api } from '../services/api';
 
 const CartContext = createContext(null);
 const CART_STORAGE_KEY = 'techzone_cart_items';
@@ -153,8 +154,9 @@ export const CartProvider = ({ children }) => {
 
   // Đặt hàng
   const placeOrder = (customerInfo, paymentMethod) => {
+    const orderId = generateOrderId();
     const newOrder = {
-      orderId: generateOrderId(),
+      orderId,
       createdAt: new Date().toISOString(),
       items: [...cartItems],
       subtotal,
@@ -166,6 +168,32 @@ export const CartProvider = ({ children }) => {
       paymentMethod: paymentMethod || 'cod',
       status: 'pending'
     };
+
+    // Gui dong bo vao MySQL Backend
+    api.createOrder({
+      customerName: customerInfo.fullName,
+      customerPhone: customerInfo.phone,
+      customerEmail: customerInfo.email,
+      customerCity: customerInfo.city,
+      customerDistrict: customerInfo.district,
+      customerAddress: `${customerInfo.address}, ${customerInfo.district}, ${customerInfo.city}`,
+      customerNote: customerInfo.note,
+      subtotal,
+      discountAmount,
+      shippingFee,
+      totalAmount: total,
+      couponCode: coupon?.code,
+      paymentMethod: paymentMethod || 'cod',
+      items: cartItems.map((itm) => ({
+        productId: itm.productId,
+        name: itm.name,
+        thumbnail: itm.thumbnail,
+        color: itm.color,
+        storage: itm.storage,
+        price: itm.price,
+        quantity: itm.quantity
+      }))
+    }).catch((err) => console.warn('Loi luu MySQL don hang:', err));
 
     setOrders((prev) => [newOrder, ...prev]);
     clearCart();

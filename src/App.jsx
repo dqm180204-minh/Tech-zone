@@ -17,6 +17,13 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
+// Admin Pages
+import { DashboardOverview } from './pages/admin/DashboardOverview';
+import { AdminProductsPage } from './pages/admin/AdminProductsPage';
+import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
+import { AdminCouponsPage } from './pages/admin/AdminCouponsPage';
+import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+
 // Scroll to top helper on route navigation
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -30,6 +37,49 @@ const ScrollToTop = () => {
   return null;
 };
 
+// Main App Container that conditionally hides Public Header/Footer on /admin
+const AppContent = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
+  return (
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-brand-500 selection:text-white">
+      {/* Global Public Header (Hidden on Admin portal) */}
+      {!isAdmin && <Header />}
+
+      {/* Main Dynamic View Content */}
+      <main className={`flex-1 ${!isAdmin ? 'pb-16 md:pb-0' : ''}`}>
+        <Routes>
+          {/* Public Store Routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          {/* Admin Dashboard Routes */}
+          <Route path="/admin" element={<DashboardOverview />} />
+          <Route path="/admin/products" element={<AdminProductsPage />} />
+          <Route path="/admin/orders" element={<AdminOrdersPage />} />
+          <Route path="/admin/coupons" element={<AdminCouponsPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+
+      {/* Global Public Footer (Hidden on Admin portal) */}
+      {!isAdmin && <Footer />}
+
+      {/* Mobile Bottom Navigation Bar (Hidden on Admin portal) */}
+      {!isAdmin && <BottomNav />}
+    </div>
+  );
+};
+
 function App() {
   return (
     <ToastProvider>
@@ -38,31 +88,7 @@ function App() {
           <CartProvider>
             <Router>
               <ScrollToTop />
-              <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-brand-500 selection:text-white">
-                {/* Global Sticky Navigation Header */}
-                <Header />
-
-                {/* Main Dynamic View Content (With bottom padding on mobile for BottomNav) */}
-                <main className="flex-1 pb-16 md:pb-0">
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/products" element={<ProductsPage />} />
-                    <Route path="/product/:id" element={<ProductDetailPage />} />
-                    <Route path="/cart" element={<CartPage />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/wishlist" element={<WishlistPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="*" element={<NotFoundPage />} />
-                  </Routes>
-                </main>
-
-                {/* Global Footer */}
-                <Footer />
-
-                {/* Mobile Bottom Navigation Bar */}
-                <BottomNav />
-              </div>
+              <AppContent />
             </Router>
           </CartProvider>
         </WishlistProvider>

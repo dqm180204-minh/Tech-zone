@@ -16,7 +16,9 @@ import {
   PackageCheck,
   Flame,
   ArrowRight,
-  SlidersHorizontal
+  SlidersHorizontal,
+  LayoutDashboard,
+  ShieldCheck
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -106,6 +108,14 @@ export const Header = () => {
             </span>
           </div>
           <div className="hidden md:flex items-center space-x-5 text-xs text-slate-400 flex-shrink-0">
+            <Link
+              to="/admin"
+              className="flex items-center gap-1 text-amber-300 hover:text-amber-200 bg-white/10 hover:bg-white/20 px-2.5 py-0.5 rounded-full font-bold transition-all border border-amber-300/30"
+            >
+              <LayoutDashboard className="w-3 h-3 text-amber-300" />
+              <span>Trang Quản Trị (Admin)</span>
+            </Link>
+            <div className="h-3 w-px bg-slate-700"></div>
             <a href="tel:18006868" className="hover:text-white flex items-center gap-1.5 transition-colors">
               <PhoneCall className="w-3.5 h-3.5 text-brand-400" />
               Hotline: <strong className="text-white">1800 6868</strong>
@@ -113,7 +123,7 @@ export const Header = () => {
             <div className="h-3 w-px bg-slate-700"></div>
             <span className="flex items-center gap-1">
               <MapPin className="w-3.5 h-3.5 text-brand-400" />
-              120 Showrooms toàn quốc
+              120 Showrooms
             </span>
           </div>
         </div>
@@ -291,6 +301,14 @@ export const Header = () => {
                       <p className="text-xs font-bold text-slate-900 truncate">{user?.name}</p>
                       <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
                     </div>
+                    <Link
+                      to="/admin"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-brand-600 bg-brand-50/50 hover:bg-brand-50 font-bold"
+                    >
+                      <LayoutDashboard className="w-4 h-4 text-brand-600" />
+                      Trang Quản Trị (Dashboard)
+                    </Link>
                     <Link
                       to="/cart"
                       onClick={() => setIsUserMenuOpen(false)}
