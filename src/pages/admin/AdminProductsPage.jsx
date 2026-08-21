@@ -12,41 +12,19 @@ import {
 } from 'lucide-react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { ProductModal } from '../../components/admin/ProductModal';
-import { api } from '../../services/api';
+import { useProducts } from '../../context/ProductContext';
 import { formatPrice } from '../../utils/formatters';
 import { useToast } from '../../context/ToastContext';
 import { BRANDS } from '../../data/mockProducts';
 
 export const AdminProductsPage = () => {
-  const [products, setProducts] = useState([]);
+  const { products, addProduct, editProduct, removeProduct, refreshProducts, loading } = useProducts();
   const [search, setSearch] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('all');
-  const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
   const { success, error } = useToast();
-
-  const loadProducts = async () => {
-    setLoading(true);
-    const res = await api.getProducts({
-      search: search || undefined,
-      brand: selectedBrand !== 'all' ? selectedBrand : undefined
-    });
-    if (res?.data) {
-      setProducts(res.data);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    loadProducts();
-  }, [selectedBrand]);
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    loadProducts();
-  };
 
   const handleOpenAdd = () => {
     setEditingProduct(null);
@@ -60,35 +38,47 @@ export const AdminProductsPage = () => {
 
   const handleSaveProduct = async (formData) => {
     if (editingProduct) {
-      const res = await api.updateProduct(editingProduct.id, formData);
-      if (res.success) {
+      const res = await editProduct(editingProduct.id, formData);
+      if (res && res.success) {
         success(`Đã cập nhật điện thoại "${formData.name}" thành công!`);
       } else {
-        error(res.message || 'Lỗi khi cập nhật sản phẩm');
+        error(res?.message || 'Lỗi khi cập nhật sản phẩm');
       }
     } else {
-      const res = await api.createProduct(formData);
-      if (res.success) {
-        success(`Đã thêm điện thoại "${formData.name}" vào cơ sở dữ liệu!`);
+      const res = await addProduct(formData);
+      if (res && res.success) {
+        success(`Đã thêm điện thoại "${formData.name}" vào cơ sở dữ liệu MySQL và Trang Chủ!`);
       } else {
-        error(res.message || 'Lỗi khi thêm sản phẩm');
+        error(res?.message || 'Lỗi khi thêm sản phẩm');
       }
     }
     setModalOpen(false);
-    loadProducts();
   };
 
   const handleDeleteProduct = async (id, name) => {
     if (window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${name}" khỏi MySQL?`)) {
-      const res = await api.deleteProduct(id);
-      if (res.success) {
+      const res = await removeProduct(id);
+      if (res && res.success) {
         success(`Đã xóa "${name}" thành công!`);
-        loadProducts();
       } else {
-        error(res.message || 'Lỗi khi xóa sản phẩm');
+        error(res?.message || 'Lỗi khi xóa sản phẩm');
       }
     }
   };
+
+  // Filter products locally from live MySQL state
+  const displayedProducts = products.filter((p) => {
+    if (search.trim()) {
+      const q = search.toLowerCase().trim();
+      const matchName = p.name?.toLowerCase().includes(q);
+      const matchBrand = p.brand?.toLowerCase().includes(q);
+      if (!matchName && !matchBrand) return false;
+    }
+    if (selectedBrand !== 'all' && p.brand?.toLowerCase() !== selectedBrand.toLowerCase()) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <AdminLayout title="Quản Lý Sản Phẩm Điện Thoại">
@@ -97,7 +87,7 @@ export const AdminProductsPage = () => {
         <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           {/* Search and Filter */}
           <div className="flex flex-col sm:flex-row items-center gap-3 flex-1">
-            <form onSubmit={handleSearchSubmit} className="relative flex-1 w-full sm:w-auto">
+            <div className="relative flex-1 w-full sm:w-auto">
               <input
                 type="text"
                 placeholder="Tìm theo tên máy, model..."
@@ -106,7 +96,7 @@ export const AdminProductsPage = () => {
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3.5 py-2 text-xs font-medium focus:ring-2 focus:ring-brand-500 focus:outline-none"
               />
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            </form>
+            </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <select
@@ -126,9 +116,9 @@ export const AdminProductsPage = () => {
           {/* Add Product Button */}
           <div className="flex items-center gap-2">
             <button
-              onClick={loadProducts}
+              onClick={refreshProducts}
               className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors"
-              title="Tải lại danh sách"
+              title="Đồng bộ lại từ MySQL"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
@@ -146,7 +136,7 @@ export const AdminProductsPage = () => {
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
           <div className="p-4 border-b border-slate-100 flex items-center justify-between">
             <span className="text-xs font-bold text-slate-700">
-              Tổng số: <strong>{products.length}</strong> sản phẩm trong Database
+              Tổng số: <strong>{displayedProducts.length}</strong> sản phẩm trong Database
             </span>
           </div>
 
@@ -164,7 +154,7 @@ export const AdminProductsPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {products.map((p) => (
+                {displayedProducts.map((p) => (
                   <tr key={p.id} className="hover:bg-slate-50 transition-colors">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">

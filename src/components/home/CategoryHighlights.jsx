@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { ProductCard } from '../product/ProductCard';
-import { PRODUCTS } from '../../data/mockProducts';
+import { useProducts } from '../../context/ProductContext';
 
 const TABS = [
   { id: 'all', label: 'Tất cả' },
@@ -14,8 +14,9 @@ const TABS = [
 
 export const CategoryHighlights = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const { products } = useProducts();
 
-  const filteredProducts = PRODUCTS.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     if (activeTab === 'all') return true;
     return p.category === activeTab;
   });
@@ -66,7 +67,7 @@ export const CategoryHighlights = () => {
             to={`/products${activeTab !== 'all' ? `?category=${activeTab}` : ''}`}
             className="inline-flex items-center gap-2 px-8 py-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold text-sm shadow-sm transition-all hover:border-brand-500"
           >
-            <span>Xem thêm sản phẩm</span>
+            <span>Xem thêm sản phẩm ({filteredProducts.length})</span>
             <ArrowRight className="w-4 h-4 text-brand-600" />
           </Link>
         </div>

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Flame, Clock, ChevronRight, Zap } from 'lucide-react';
 import { ProductCard } from '../product/ProductCard';
-import { PRODUCTS } from '../../data/mockProducts';
+import { useProducts } from '../../context/ProductContext';
 
 export const FlashSale = () => {
+  const { products } = useProducts();
+
   // Countdown Timer: 08:45:30 style
   const [timeLeft, setTimeLeft] = useState({
     hours: 8,
@@ -28,7 +30,7 @@ export const FlashSale = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const flashSaleProducts = PRODUCTS.filter((p) => p.isFlashSale);
+  const flashSaleProducts = products.filter((p) => p.isFlashSale);
 
   const formatDigit = (num) => String(num).padStart(2, '0');
 
@@ -86,7 +88,7 @@ export const FlashSale = () => {
               to="/products?filter=flashsale"
               className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-white text-red-600 font-extrabold text-xs shadow-lg hover:bg-slate-50 transition-colors"
             >
-              <span>Xem tất cả sản phẩm Flash Sale</span>
+              <span>Xem tất cả ({flashSaleProducts.length}) sản phẩm Flash Sale</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>

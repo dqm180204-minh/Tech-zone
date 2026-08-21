@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { AuthProvider } from './context/AuthContext';
+import { ProductProvider } from './context/ProductContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider } from './context/CartContext';
 import { Header } from './components/common/Header';
@@ -121,14 +122,16 @@ function App() {
   return (
     <ToastProvider>
       <AuthProvider>
-        <WishlistProvider>
-          <CartProvider>
-            <Router>
-              <ScrollToTop />
-              <AppContent />
-            </Router>
-          </CartProvider>
-        </WishlistProvider>
+        <ProductProvider>
+          <WishlistProvider>
+            <CartProvider>
+              <Router>
+                <ScrollToTop />
+                <AppContent />
+              </Router>
+            </CartProvider>
+          </WishlistProvider>
+        </ProductProvider>
       </AuthProvider>
     </ToastProvider>
   );

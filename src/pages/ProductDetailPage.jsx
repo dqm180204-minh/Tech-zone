@@ -24,11 +24,11 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductSpecs } from '../components/product/ProductSpecs';
 import { ProductReviews } from '../components/product/ProductReviews';
 import { ProductCard } from '../components/product/ProductCard';
-import { PRODUCTS } from '../data/mockProducts';
 import { formatPrice, calculateDiscountPercent } from '../utils/formatters';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductContext';
 import { useToast } from '../context/ToastContext';
 
 export const ProductDetailPage = () => {
@@ -37,10 +37,11 @@ export const ProductDetailPage = () => {
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { user } = useAuth();
+  const { getProductById, products } = useProducts();
   const { success, info } = useToast();
 
   const isAdmin = user?.role === 'admin';
-  const product = PRODUCTS.find((p) => p.id === id);
+  const product = getProductById(id);
 
   // Variant States
   const [selectedImage, setSelectedImage] = useState('');
@@ -102,7 +103,7 @@ export const ProductDetailPage = () => {
   };
 
   // Similar Products
-  const similarProducts = PRODUCTS.filter(
+  const similarProducts = products.filter(
     (p) => p.id !== product.id && (p.brand === product.brand || p.category === product.category)
   ).slice(0, 4);
 

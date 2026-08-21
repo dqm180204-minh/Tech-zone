@@ -23,7 +23,8 @@ import {
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
-import { PRODUCTS, BRANDS } from '../../data/mockProducts';
+import { useProducts } from '../../context/ProductContext';
+import { BRANDS } from '../../data/mockProducts';
 import { formatPrice } from '../../utils/formatters';
 
 export const Header = () => {
@@ -36,6 +37,7 @@ export const Header = () => {
   const { totalItems } = useCart();
   const { wishlistCount } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
+  const { products } = useProducts();
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,7 +56,7 @@ export const Header = () => {
   useEffect(() => {
     if (searchQuery.trim().length > 0) {
       const q = searchQuery.toLowerCase().trim();
-      const filtered = PRODUCTS.filter(
+      const filtered = products.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.brand.toLowerCase().includes(q) ||

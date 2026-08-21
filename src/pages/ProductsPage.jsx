@@ -13,9 +13,11 @@ import {
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductCard } from '../components/product/ProductCard';
 import { ProductFilter, PRICE_RANGES } from '../components/product/ProductFilter';
-import { PRODUCTS, BRANDS } from '../data/mockProducts';
+import { BRANDS } from '../data/mockProducts';
+import { useProducts } from '../context/ProductContext';
 
 export const ProductsPage = () => {
+  const { products } = useProducts();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Mobile Filter Drawer state
@@ -71,7 +73,7 @@ export const ProductsPage = () => {
 
   // Filter and Sort Logic
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((item) => {
+    return products.filter((item) => {
       // Search
       if (filters.search) {
         const q = filters.search.toLowerCase();
@@ -128,7 +130,7 @@ export const ProductsPage = () => {
       if (sortBy === 'newest') return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
       return b.soldCount - a.soldCount; // featured / best-seller
     });
-  }, [filters, sortBy]);
+  }, [products, filters, sortBy]);
 
   // Active filter count for badge
   const activeFiltersCount = Object.entries(filters).filter(([k, v]) => {
