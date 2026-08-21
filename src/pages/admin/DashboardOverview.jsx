@@ -198,10 +198,10 @@ export const DashboardOverview = () => {
                     </td>
                     <td className="py-3 px-4 text-right">
                       <Link
-                        to="/admin/orders"
-                        className="text-xs font-bold text-brand-600 hover:text-brand-800"
+                        to={`/admin/orders?orderCode=${ord.order_code || ord.id}`}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold transition-colors"
                       >
-                        Chi tiết →
+                        <span>Xử lý đơn →</span>
                       </Link>
                     </td>
                   </tr>

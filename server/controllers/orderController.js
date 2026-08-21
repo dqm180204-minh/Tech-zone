@@ -80,14 +80,14 @@ export const getAllOrders = async (req, res) => {
     let query = 'SELECT * FROM orders WHERE 1=1';
     const params = [];
 
-    if (status && status !== 'all') {
+    if (status && status !== 'all' && status !== 'undefined') {
       query += ' AND order_status = ?';
       params.push(status);
     }
 
-    if (search) {
+    if (search && search !== 'undefined' && search.trim() !== '') {
       query += ' AND (order_code LIKE ? OR customer_name LIKE ? OR customer_phone LIKE ?)';
-      const term = `%${search}%`;
+      const term = `%${search.trim()}%`;
       params.push(term, term, term);
     }
 

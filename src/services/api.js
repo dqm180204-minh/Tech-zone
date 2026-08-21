@@ -1,5 +1,17 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Helper tao query string sach se (loai bo undefined, null, "", "all", "undefined")
+const createCleanQuery = (params = {}) => {
+  const clean = {};
+  for (const [key, val] of Object.entries(params)) {
+    if (val !== undefined && val !== null && val !== '' && val !== 'all' && val !== 'undefined') {
+      clean[key] = val;
+    }
+  }
+  const query = new URLSearchParams(clean).toString();
+  return query ? `?${query}` : '';
+};
+
 // Helper fetch wrapper
 const request = async (endpoint, options = {}) => {
   try {
@@ -13,7 +25,7 @@ const request = async (endpoint, options = {}) => {
     const data = await res.json();
     return data;
   } catch (error) {
-    console.warn(`[API] Khong the ket noi den ${endpoint}, su dung fallback`, error.message);
+    console.warn(`[API] Khong the ket noi den ${endpoint}, su dung fallback:`, error.message);
     return { success: false, fallback: true, error: error.message };
   }
 };
@@ -21,8 +33,7 @@ const request = async (endpoint, options = {}) => {
 export const api = {
   // Products
   getProducts: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    return request(`/products${query ? `?${query}` : ''}`);
+    return request(`/products${createCleanQuery(params)}`);
   },
   getProductById: async (id) => {
     return request(`/products/${id}`);
@@ -47,8 +58,7 @@ export const api = {
 
   // Orders
   getOrders: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    return request(`/orders${query ? `?${query}` : ''}`);
+    return request(`/orders${createCleanQuery(params)}`);
   },
   createOrder: async (orderData) => {
     return request('/orders', {
