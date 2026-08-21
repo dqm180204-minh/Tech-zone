@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Smartphone, Lock, Mail, ArrowRight, UserCheck, Sparkles } from 'lucide-react';
+import { Smartphone, Lock, Mail, ArrowRight, UserCheck, Sparkles, ShieldCheck, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const LoginPage = () => {
@@ -8,10 +8,11 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { login, loginWithDemo } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const redirectMessage = location.state?.message;
   const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
@@ -20,18 +21,39 @@ export const LoginPage = () => {
     const success = await login(email, password);
     setIsLoading(false);
     if (success) {
-      navigate(from, { replace: true });
+      if (email.includes('admin')) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     }
   };
 
-  const handleDemoLogin = () => {
-    loginWithDemo();
-    navigate(from, { replace: true });
+  const handleAdminLogin = async () => {
+    setEmail('admin@techzone.vn');
+    setPassword('admin123');
+    setIsLoading(true);
+    const success = await login('admin@techzone.vn', 'admin123');
+    setIsLoading(false);
+    if (success) {
+      navigate('/admin', { replace: true });
+    }
+  };
+
+  const handleCustomerLogin = async () => {
+    setEmail('customer@techzone.vn');
+    setPassword('123456');
+    setIsLoading(true);
+    const success = await login('customer@techzone.vn', '123456');
+    setIsLoading(false);
+    if (success) {
+      navigate('/', { replace: true });
+    }
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl space-y-6">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-10">
+      <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xl space-y-5">
         {/* Header Logo */}
         <div className="text-center space-y-2">
           <Link to="/" className="inline-flex items-center gap-2">
@@ -42,35 +64,51 @@ export const LoginPage = () => {
               TECH<span className="text-brand-600">ZONE</span>
             </span>
           </Link>
-          <h2 className="text-xl font-bold text-slate-900 pt-2">
+          <h2 className="text-xl font-bold text-slate-900 pt-1">
             Đăng nhập tài khoản
           </h2>
           <p className="text-xs text-slate-500">
-            Quản lý đơn hàng, theo dõi giao hàng và nhận ưu đãi riêng
+            Hệ thống phân quyền Quản Trị Viên và Khách Hàng
           </p>
         </div>
 
-        {/* 1-Click Quick Demo Login Button */}
-        <div className="p-3.5 rounded-2xl bg-brand-50 border border-brand-200/80 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-brand-900">
-            <Sparkles className="w-4 h-4 text-brand-600" />
-            <span>Trải nghiệm nhanh hệ thống</span>
+        {/* Redirect Notice if user was blocked from /admin */}
+        {redirectMessage && (
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium leading-relaxed">
+            {redirectMessage}
           </div>
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1.5"
-          >
-            <UserCheck className="w-4 h-4" />
-            <span>Đăng nhập 1-Click với Tài khoản Demo</span>
-          </button>
+        )}
+
+        {/* 1-Click Quick Login Buttons for Demo Testing */}
+        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+            ⚡ Đăng nhập thử nghiệm nhanh:
+          </span>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={handleAdminLogin}
+              className="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-amber-300 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 border border-amber-400/30"
+            >
+              <ShieldCheck className="w-4 h-4 text-amber-400" />
+              <span>Acc Admin</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleCustomerLogin}
+              className="py-2.5 px-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
+            >
+              <User className="w-4 h-4" />
+              <span>Acc Khách Hàng</span>
+            </button>
+          </div>
         </div>
 
         {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-slate-200"></div>
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Hoặc dùng email
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Hoặc tự nhập email & mật khẩu
           </span>
           <div className="flex-1 h-px bg-slate-200"></div>
         </div>
@@ -87,7 +125,7 @@ export const LoginPage = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="customer@techzone.vn"
+                placeholder="admin@techzone.vn hoặc user@gmail.com"
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3.5 py-2.5 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"
               />
               <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -117,7 +155,7 @@ export const LoginPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 mt-2"
+            className="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-xs shadow-md shadow-brand-500/25 transition-all flex items-center justify-center gap-1.5 mt-2"
           >
             {isLoading ? (
               <span>Đang xử lý...</span>
@@ -131,10 +169,10 @@ export const LoginPage = () => {
         </form>
 
         {/* Bottom Link to Register */}
-        <div className="text-center pt-2 text-xs text-slate-500">
-          Chưa có tài khoản TechZone?{' '}
+        <div className="text-center pt-1 text-xs text-slate-500">
+          Chưa có tài khoản?{' '}
           <Link to="/register" className="font-bold text-brand-600 hover:underline">
-            Đăng ký ngay
+            Đăng ký tài khoản khách hàng
           </Link>
         </div>
       </div>

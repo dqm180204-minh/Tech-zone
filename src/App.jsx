@@ -7,6 +7,8 @@ import { CartProvider } from './context/CartContext';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
 import { BottomNav } from './components/common/BottomNav';
+import { AdminRoute } from './components/common/AdminRoute';
+
 import { HomePage } from './pages/HomePage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
@@ -40,15 +42,15 @@ const ScrollToTop = () => {
 // Main App Container that conditionally hides Public Header/Footer on /admin
 const AppContent = () => {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith('/admin');
+  const isAdminPath = location.pathname.startsWith('/admin');
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-brand-500 selection:text-white">
       {/* Global Public Header (Hidden on Admin portal) */}
-      {!isAdmin && <Header />}
+      {!isAdminPath && <Header />}
 
       {/* Main Dynamic View Content */}
-      <main className={`flex-1 ${!isAdmin ? 'pb-16 md:pb-0' : ''}`}>
+      <main className={`flex-1 ${!isAdminPath ? 'pb-16 md:pb-0' : ''}`}>
         <Routes>
           {/* Public Store Routes */}
           <Route path="/" element={<HomePage />} />
@@ -60,22 +62,57 @@ const AppContent = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Admin Dashboard Routes */}
-          <Route path="/admin" element={<DashboardOverview />} />
-          <Route path="/admin/products" element={<AdminProductsPage />} />
-          <Route path="/admin/orders" element={<AdminOrdersPage />} />
-          <Route path="/admin/coupons" element={<AdminCouponsPage />} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
+          {/* Protected Admin Dashboard Routes (Chi danh cho Admin) */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <DashboardOverview />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products"
+            element={
+              <AdminRoute>
+                <AdminProductsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <AdminRoute>
+                <AdminOrdersPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/coupons"
+            element={
+              <AdminRoute>
+                <AdminCouponsPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <AdminRoute>
+                <AdminUsersPage />
+              </AdminRoute>
+            }
+          />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 
       {/* Global Public Footer (Hidden on Admin portal) */}
-      {!isAdmin && <Footer />}
+      {!isAdminPath && <Footer />}
 
       {/* Mobile Bottom Navigation Bar (Hidden on Admin portal) */}
-      {!isAdmin && <BottomNav />}
+      {!isAdminPath && <BottomNav />}
     </div>
   );
 };
